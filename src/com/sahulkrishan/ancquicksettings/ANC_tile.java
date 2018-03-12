@@ -6,10 +6,6 @@ import android.service.quicksettings.TileService;
 import android.util.Log;
 import android.widget.Toast;
 import java.io.IOException;
-/* import java.util.concurrent.TimeUnit;
-import android.view.KeyEvent;
-import android.media.AudioManager;
-import android.content.Context; */
 
 /**
  * Created by Sahul Krishan on 20/02/2018.
@@ -38,8 +34,6 @@ public class ANC_tile extends TileService {
             // set persist.audio.anc.enabled to false and check if it's actually set to false
             try {
                 Log.d(LOG_TAG, "Executing commands...");
-                // Request root permissions
-                /*rt.exec("su");*/
                 // Disable ANC
                 Process disable_anc = rt.exec("system/bin/setprop persist.audio.anc.enabled false");
                 disable_anc.waitFor();
@@ -50,19 +44,13 @@ public class ANC_tile extends TileService {
                     tile.setState(Tile.STATE_INACTIVE);
                     tile.setLabel(getString(R.string.anc_inactive));
                     tile.setIcon(Icon.createWithResource(this, R.drawable.ic_tile_anc));
-                    /* AudioManager mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-                    if (mAudioManager.isMusicActive()) {
-                        KeyEvent stop = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_STOP);
-                        mAudioManager.dispatchMediaKeyEvent(stop);
-                        TimeUnit.MILLISECONDS.sleep(500);
-                        KeyEvent play = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY);
-                        mAudioManager.dispatchMediaKeyEvent(play);
-                    } */ /** Disable for now, this doesn't automatically restart ANC **/
+					Toast.makeText(getApplicationContext(),R.string.reconnect,Toast.LENGTH_LONG).show();
                 } else {
                     // Failed to disable ANC, set tile to unavailable and display a warning.
                     Log.d(LOG_TAG, "Failed to disable ANC, displaying warning...");
                     tile.setState(Tile.STATE_ACTIVE);
                     tile.setLabel(getString(R.string.anc_failed_disable));
+					tile.setIcon(Icon.createWithResource(this, R.drawable.ic_tile_anc_error));
                 }
             } catch (IOException e) {e.printStackTrace();} catch (InterruptedException e) {e.printStackTrace();}
             tile.updateTile();
@@ -74,8 +62,6 @@ public class ANC_tile extends TileService {
                 // set persist.audio.anc.enabled to true and check if it's actually set to true
                 try {
                     Log.d(LOG_TAG, "Executing commands...");
-                    // Request root permissions
-                    /*rt.exec("su");*/
                     // Enable ANC
                     Process enable_anc = rt.exec("system/bin/setprop persist.audio.anc.enabled true");
                     enable_anc.waitFor();
@@ -87,14 +73,6 @@ public class ANC_tile extends TileService {
                         tile.setLabel(getString(R.string.anc_active));
                         tile.setIcon(Icon.createWithResource(this, R.drawable.ic_tile_anc));
                         Toast.makeText(getApplicationContext(),R.string.reconnect,Toast.LENGTH_LONG).show();
-                        /* AudioManager mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-                        if (mAudioManager.isMusicActive()) {
-                            KeyEvent stop = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PAUSE);
-                            mAudioManager.dispatchMediaKeyEvent(stop);
-                            TimeUnit.MILLISECONDS.sleep(500);
-                            KeyEvent play = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY);
-                            mAudioManager.dispatchMediaKeyEvent(play);
-                        } */ /** Disable for now, this doesn't automatically restart ANC **/
                     } else {
                         // Failed to enable ANC, set tile to unavailable and display a warning.
                         Log.d(LOG_TAG, "Failed to enable ANC, displaying warning...");
