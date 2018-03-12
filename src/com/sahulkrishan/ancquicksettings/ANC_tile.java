@@ -37,7 +37,6 @@ public class ANC_tile extends TileService {
                     tile.setState(Tile.STATE_INACTIVE);
                     tile.setLabel(getString(R.string.anc_inactive));
                     tile.setIcon(Icon.createWithResource(this, R.drawable.ic_tile_anc));
-                    Toast.makeText(getApplicationContext(),R.string.reconnect,Toast.LENGTH_LONG).show();
                 } else {
                     // Failed to disable ANC, set tile to unavailable and display a warning.
                     Log.d(LOG_TAG, "Failed to disable ANC, displaying warning...");
