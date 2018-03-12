@@ -44,13 +44,13 @@ public class ANC_tile extends TileService {
                     tile.setState(Tile.STATE_INACTIVE);
                     tile.setLabel(getString(R.string.anc_inactive));
                     tile.setIcon(Icon.createWithResource(this, R.drawable.ic_tile_anc));
-					Toast.makeText(getApplicationContext(),R.string.reconnect,Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),R.string.reconnect,Toast.LENGTH_LONG).show();
                 } else {
                     // Failed to disable ANC, set tile to unavailable and display a warning.
                     Log.d(LOG_TAG, "Failed to disable ANC, displaying warning...");
                     tile.setState(Tile.STATE_ACTIVE);
                     tile.setLabel(getString(R.string.anc_failed_disable));
-					tile.setIcon(Icon.createWithResource(this, R.drawable.ic_tile_anc_error));
+                    tile.setIcon(Icon.createWithResource(this, R.drawable.ic_tile_anc_error));
                 }
             } catch (IOException e) {e.printStackTrace();} catch (InterruptedException e) {e.printStackTrace();}
             tile.updateTile();
