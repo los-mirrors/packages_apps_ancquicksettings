@@ -14,11 +14,17 @@
 # limitations under the License.
 #
 
-include $(call all-subdir-makefiles)
+LOCAL_PATH:= $(call my-dir)
+
 include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := $(call all-java-files-under, src)
 
 LOCAL_PACKAGE_NAME := ANCQuickSettings
 LOCAL_CERTIFICATE := platform
 LOCAL_PRIVILEDGED_MODULE := true
-LOCAL_SRC_FILES := $(call all-java-files-under, src)
+LOCAL_MODULE_TAGS := optional
+
 LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res
+include $(call all-makefiles-under,$(LOCAL_PATH))
+include $(BUILD_PACKAGE)
