@@ -6,6 +6,7 @@ import android.service.quicksettings.TileService;
 import android.util.Log;
 import android.widget.Toast;
 import java.io.IOException;
+import android.os.SystemProperties;
 
 /**
  * Created by Sahul Krishan on 20/02/2018.
@@ -32,11 +33,10 @@ public class ANC_tile extends TileService {
         Tile tile = getQsTile();
         if (state == STATE_ON) {
             // set persist.audio.anc.enabled to false and check if it's actually set to false
-            try {
+	    try {
                 Log.d(LOG_TAG, "Executing commands...");
                 // Disable ANC
-                Process disable_anc = rt.exec("system/bin/setprop persist.audio.anc.enabled false");
-                disable_anc.waitFor();
+                SystemProperties.set("persist.audio.anc.enabled", "false");;
                 if (getSystemProperty("persist.audio.anc.enabled").equals("false")){
                     // ANC is disabled, update tile.
                     Log.d(LOG_TAG, "ANC is disabled, setting tile to inactive...");
@@ -47,24 +47,22 @@ public class ANC_tile extends TileService {
                     Toast.makeText(getApplicationContext(),R.string.reconnect,Toast.LENGTH_LONG).show();
                 } else {
                     // Failed to disable ANC, set tile to unavailable and display a warning.
-                    Log.d(LOG_TAG, "Failed to disable ANC, displaying warning...");
+                    Log.e(LOG_TAG, "Failed to disable ANC, displaying warning...");
                     tile.setState(Tile.STATE_ACTIVE);
                     tile.setLabel(getString(R.string.anc_failed_disable));
                     tile.setIcon(Icon.createWithResource(this, R.drawable.ic_tile_anc_error));
-                }
-            } catch (IOException e) {e.printStackTrace();} catch (InterruptedException e) {e.printStackTrace();}
-            tile.updateTile();
+		}
+            } finally {}
         } else {
             if (state == STATE_OFF) {
                 state = STATE_ON;
                 tile.setState(Tile.STATE_ACTIVE);
                 tile.setLabel(getString(R.string.anc_active));
                 // set persist.audio.anc.enabled to true and check if it's actually set to true
-                try {
+		try {
                     Log.d(LOG_TAG, "Executing commands...");
                     // Enable ANC
-                    Process enable_anc = rt.exec("system/bin/setprop persist.audio.anc.enabled true");
-                    enable_anc.waitFor();
+                    SystemProperties.set("persist.audio.anc.enabled", "true");
                     if (getSystemProperty("persist.audio.anc.enabled").equals("true")){
                         // ANC is enabled, update tile.
                         Log.d(LOG_TAG, "ANC is enabled, setting tile to active...");
@@ -75,15 +73,15 @@ public class ANC_tile extends TileService {
                         Toast.makeText(getApplicationContext(),R.string.reconnect,Toast.LENGTH_LONG).show();
                     } else {
                         // Failed to enable ANC, set tile to unavailable and display a warning.
-                        Log.d(LOG_TAG, "Failed to enable ANC, displaying warning...");
+                        Log.e(LOG_TAG, "Failed to enable ANC, displaying warning...");
                         tile.setState(Tile.STATE_INACTIVE);
                         tile.setLabel(getString(R.string.anc_failed_enable));
                         tile.setIcon(Icon.createWithResource(this, R.drawable.ic_tile_anc_error));
                     }
-                } catch (IOException e) {e.printStackTrace();} catch (InterruptedException e) {e.printStackTrace();}
-                tile.updateTile();
+		} finally {}
             }
         }
+	tile.updateTile();
         Log.d(LOG_TAG, "ANC mode = " + Integer.toString(state));
     }
 
