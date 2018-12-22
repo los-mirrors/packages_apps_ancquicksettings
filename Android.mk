@@ -24,6 +24,7 @@ LOCAL_PACKAGE_NAME := ANCQuickSettings
 LOCAL_CERTIFICATE := platform
 LOCAL_PRIVILEDGED_MODULE := true
 LOCAL_MODULE_TAGS := optional
+LOCAL_PRIVATE_PLATFORM_APIS := true
 
 LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res
 include $(call all-makefiles-under,$(LOCAL_PATH))
